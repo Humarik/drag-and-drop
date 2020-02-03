@@ -5,7 +5,7 @@ function dragAndDrop() {
     wrapper = document.querySelector('.wrapper');
 
     function dragStart(e) {
-        if (!e.target.classList.contains('card')) return
+        if (!e.target.classList.contains('card')) return card = undefined;
 
         card = document.querySelector(`#${e.target.id}`);
         startParent = e.target.parentNode;
@@ -21,22 +21,25 @@ function dragAndDrop() {
     };
 
     function dragOver(e) {
+        if (!card) return;
         e.preventDefault();
     };
 
     function dragEnter(e) {
+        if (!card) return;
         e.preventDefault();
-        
         this.classList.add('hovered');
     };
 
     function dragLeave(e) {
+        if (!card) return;
         this.classList.remove('hovered');
-
         if (e.target.classList[0] !== 'container') this.classList.add('hovered');
     };
 
     function dragDrop() {
+        if(!card) return;
+
         this.append(card);
         this.classList.remove('hovered');
 
@@ -57,9 +60,9 @@ function dragAndDrop() {
 dragAndDrop();
 
 const data = [
-    {'title': 'first', 'board': [{'title': 'first', 'id': 'f'}, {'title': 'second', 'id': 's'}]},
-    {'title': 'second', 'board': []}, 
-    {'title': 'third', 'board': []}, 
+    {'title': 'first', 'board': [{ 'title': 'first', 'id': 'f' }, { 'title': 'second', 'id': 's' }, { 'title': 'third', 'id': 't' }]},
+    {'title': 'second', 'board': []},
+    {'title': 'third', 'board': []},
     {'title': 'fourth', 'board': []}
 ]
 
@@ -75,14 +78,14 @@ draw();
 
 function findCard(id) {
     for(let i = 0; i < data.length; i++) {
-        if (data[i].board.some(i => i.id = id)) {
+        if (data[i].board.some(i => i.id === id)) {
             return data[i].board.find(i => i.id === id);
         }
     }
 }
 
 function switchBoard(card, endParent, startParent) {
-    let selectedCard = findCard(card.id);
+    const selectedCard = findCard(card.id);
 
     data.forEach(item => {
         if (item.title === endParent.classList[1]) {
